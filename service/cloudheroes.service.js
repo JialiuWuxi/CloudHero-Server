@@ -34,7 +34,7 @@ function postHeroes(req, res) {
 }
 
 function dataVerify(req, res) {
-    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benifitLevel){
+    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel){
         res.status(400).send('missing some data' + JSON.stringify(req.body));
     }
 }
