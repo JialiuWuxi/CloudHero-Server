@@ -7,12 +7,17 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    cloudHeroService.postHeroes(req, res);
+    cloudHeroService.postHero(req, res);
 })
 
 router.put('/:id', (req, res) => {
-    cloudHeroService.putHeroes(req, res);
+    cloudHeroService.putHero(req, res);
 })
+
+router.delete('/:id', (req, res) => {
+    cloudHeroService.deleteHero(req, res);
+})
+
 
 
 module.exports = router;

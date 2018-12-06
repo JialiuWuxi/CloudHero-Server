@@ -15,7 +15,7 @@ function getHeroes(req, res) {
         }); 
 }
 
-function postHeroes(req, res) {
+function postHero(req, res) {
 
     if(!dataVerify(req, res)) return;
 
@@ -36,7 +36,7 @@ function postHeroes(req, res) {
     })
 }
 
-function putHeroes(req, res) {
+function putHero(req, res) {
     if(!dataVerify(req,res)) return;
     const id = parseInt(req.params.id, 10);
     const updatedHero = { MPNid: req.body.MPNid, name: req.body.name, region: req.body.region, benefitLevel: req.body.benefitLevel };
@@ -55,7 +55,20 @@ function putHeroes(req, res) {
     });
 }
 
-function dataVerify(req, res) {
+function deleteHero (req, res) {
+    const id = parseInt(req.params.id, 10);
+    CloudHero.findOneAndDelete({MPNid: id})
+        .then(hero => {
+            if(!chechFound(res, hero)) return;
+            res.status(200).json(hero);
+            console.log('hero deleted successfully.');
+        })
+        .catch(error => {
+            if(checkServerError(res, error)) return;
+        });
+}
+
+function dataVerify (req, res) {
     if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel){
         res.status(400).send('missing some data' + JSON.stringify(req.body));
         return false;
@@ -80,7 +93,7 @@ function chechFound(res, hero) {
 
 module.exports = {
     getHeroes,
-    postHeroes,
-    dataVerify,
-    putHeroes,
+    postHero,
+    putHero,
+    deleteHero,
 }
