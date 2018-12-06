@@ -6,11 +6,12 @@ router.get('/', (req, res) => {
     cloudHeroService.getHeroes(req, res);
 })
 
-router.post('/', (req, res, next) =>{
-    cloudHeroService.dataVerify(req, res);
-    next();
-},(req, res) => {
+router.post('/', (req, res) => {
     cloudHeroService.postHeroes(req, res);
+})
+
+router.put('/:id', (req, res) => {
+    cloudHeroService.putHeroes(req, res);
 })
 
 
