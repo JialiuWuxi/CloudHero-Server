@@ -42,7 +42,7 @@ function putHero(req, res) {
     const updatedHero = { MPNid: req.body.MPNid, name: req.body.name, region: req.body.region, benefitLevel: req.body.benefitLevel };
     CloudHero.findOne({MPNid: id}, (error, hero) => {
         if(checkServerError(res, error)) return;
-        if(!chechFound( res, hero)) return;
+        if(!checkFound( res, hero)) return;
         hero.MPNid = updatedHero.MPNid;
         hero.name = updatedHero.name;
         hero.region = updatedHero.region;
@@ -59,13 +59,26 @@ function deleteHero (req, res) {
     const id = parseInt(req.params.id, 10);
     CloudHero.findOneAndDelete({MPNid: id})
         .then(hero => {
-            if(!chechFound(res, hero)) return;
+            if(!checkFound(res, hero)) return;
             res.status(200).json(hero);
             console.log('hero deleted successfully.');
         })
         .catch(error => {
             if(checkServerError(res, error)) return;
         });
+}
+
+function getHeroesByPTC (req , res) {
+    const docquery = CloudHero.find({ptc: req.params.alias});
+    docquery
+        .exec()
+        .then(cloudHeroes => {
+            res.status(200).send(cloudHeroes);
+        })
+        .catch(error => {
+            res.status(500).send(error);
+            return;
+        })
 }
 
 function dataVerify (req, res) {
@@ -83,7 +96,7 @@ function checkServerError(res, error) {
     }
 }
 
-function chechFound(res, hero) {
+function checkFound(res, hero) {
     if (!hero) {
         res.status(404).send('Hero not found.');
         return;
@@ -96,4 +109,5 @@ module.exports = {
     postHero,
     putHero,
     deleteHero,
+    getHeroesByPTC,
 }

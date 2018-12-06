@@ -18,6 +18,10 @@ router.delete('/:id', (req, res) => {
     cloudHeroService.deleteHero(req, res);
 })
 
+router.get('/ptc/:alias', (req, res) => {
+    cloudHeroService.getHeroesByPTC(req, res);
+})
+
 
 
 module.exports = router;
