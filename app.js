@@ -4,6 +4,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+var cloudheroesRouter = require('./routes/cloudheroes');
 
 var app = express();
 
@@ -21,5 +22,6 @@ app.use(function(req, res, next) {
 });
 
 app.use('/', indexRouter);
+app.use('/cloudheroes', cloudheroesRouter);
 
 module.exports = app;
