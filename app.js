@@ -3,12 +3,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('dotenv').config();
+
 var indexRouter = require('./routes/index');
 var cloudheroesRouter = require('./routes/cloudheroes');
 
 var app = express();
-
-require('dotenv').config();
 
 app.use(logger('dev'));
 app.use(express.json());
