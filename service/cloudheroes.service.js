@@ -82,7 +82,7 @@ function getHeroesByPTC (req , res) {
 }
 
 function dataVerify (req, res) {
-    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel){
+    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name){
         res.status(400).send('missing some data' + JSON.stringify(req.body));
         return false;
     }

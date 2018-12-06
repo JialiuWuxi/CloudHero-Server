@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const CloudHeroSchma = new Schema({
-    MPNid:{type: Number, required: true, unique: true},
+    MPNid: Number,
     name: String,
     region: String,
     benefitLevel: String,

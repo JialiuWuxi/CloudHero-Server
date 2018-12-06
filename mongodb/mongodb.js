@@ -11,7 +11,7 @@ function connect(){
             password: `${process.env.key}`
         },
         useNewUrlParser: true,
-        useCreateIndex: false,
+        useCreateIndex: true,
     });
 }
 module.exports = {
