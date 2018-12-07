@@ -101,7 +101,7 @@ function getHeroesByPDM (req, res) {
 }
 
 function dataVerify (req, res) {
-    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name){
+    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name || !req.body.pdm){
         res.status(400).send('missing some data' + JSON.stringify(req.body));
         return false;
     }
