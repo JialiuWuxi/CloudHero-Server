@@ -25,6 +25,7 @@ function postHero(req, res) {
         benefitLevel: req.body.benefitLevel,
         region: req.body.region,
         ptc: req.body.ptc,
+        pdm: req.body.pdm,
     };
 
     cloudHeroes = new CloudHero(newHero);
@@ -39,7 +40,12 @@ function postHero(req, res) {
 function putHero(req, res) {
     if(!dataVerify(req,res)) return;
     const id = parseInt(req.params.id, 10);
-    const updatedHero = { MPNid: req.body.MPNid, name: req.body.name, region: req.body.region, benefitLevel: req.body.benefitLevel };
+    const updatedHero = { MPNid: req.body.MPNid,
+                          name: req.body.name,
+                          region: req.body.region, 
+                          benefitLevel: req.body.benefitLevel,
+                          pdm: req.body.pdm };
+
     CloudHero.findOne({MPNid: id}, (error, hero) => {
         if(checkServerError(res, error)) return;
         if(!checkFound( res, hero)) return;
@@ -47,6 +53,7 @@ function putHero(req, res) {
         hero.name = updatedHero.name;
         hero.region = updatedHero.region;
         hero.benefitLevel = updatedHero.benefitLevel;
+        hero.pdm = updatedHero.pdm;
         hero.save(error => {
             if(checkServerError(res, error)) return;
             res.status(200).json(hero);
@@ -81,6 +88,18 @@ function getHeroesByPTC (req , res) {
         })
 }
 
+function getHeroesByPDM (req, res) {
+    const docquery = CloudHero.find({pdm: req.params.alias});
+    docquery
+        .exec()
+        .then( cloudheroes => {
+            res.status(200).send(cloudheroes);
+        }).catch(error => {
+            res.status(500).send(error);
+            return;
+        })
+}
+
 function dataVerify (req, res) {
     if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name){
         res.status(400).send('missing some data' + JSON.stringify(req.body));
@@ -110,4 +129,5 @@ module.exports = {
     putHero,
     deleteHero,
     getHeroesByPTC,
+    getHeroesByPDM,
 }
