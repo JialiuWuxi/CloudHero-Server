@@ -15,6 +15,32 @@ function getPTCList (req, res) {
         }); 
 }
 
+
+function postPTC (req, res) {
+
+    const newPTC = {
+        id: req.body.id,
+        name: req.body.name,
+        email: req.body.email,
+    };
+
+    ptc = new PTC( newPTC );
+
+    ptc.save(error =>{
+        if(checkServerError(res, error)) return;
+        res.status(201).send(ptc);
+        console.log('ptc created successfully!')
+    })
+}
+
+function checkServerError(res, error) {
+    if(error){
+        res.status(500).send(error);
+        return error;
+    }
+}
+
 module.exports = {
     getPTCList,
+    postPTC,
 }
