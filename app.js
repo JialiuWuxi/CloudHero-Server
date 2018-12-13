@@ -8,6 +8,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var cloudheroesRouter = require('./routes/cloudheroes');
 var commounicationsRouter = require('./routes/commounications');
+var ptcsRouter = require('./routes/PTCs');
 
 var app = express();
 
@@ -27,5 +28,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/cloudheroes', cloudheroesRouter);
 app.use('/commounications', commounicationsRouter);
+app.use('/PTCs', ptcsRouter);
+
 
 module.exports = app;
