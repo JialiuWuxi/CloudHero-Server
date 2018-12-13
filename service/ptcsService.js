@@ -7,7 +7,7 @@ function getPTCList (req, res) {
     docquery
         .exec()
         .then(PTC => {
-            res.status(200).json(PTC);
+            res.status(200).json(JSON.stringify(PTC));
         })
         .catch(error => {
             res.status(500).send(error);
