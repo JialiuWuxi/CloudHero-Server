@@ -26,6 +26,8 @@ function postHero(req, res) {
         region: req.body.region,
         ptc: req.body.ptc,
         pdm: req.body.pdm,
+        ptcName: req.body.ptcName,
+        pdmName: req.body.pdmName,
     };
 
     cloudHeroes = new CloudHero(newHero);
@@ -44,7 +46,8 @@ function putHero(req, res) {
                           name: req.body.name,
                           region: req.body.region, 
                           benefitLevel: req.body.benefitLevel,
-                          pdm: req.body.pdm };
+                          pdm: req.body.pdm,
+                          pdmName: req.body.pdmName };
 
     CloudHero.findOne({MPNid: id}, (error, hero) => {
         if(checkServerError(res, error)) return;
@@ -54,6 +57,7 @@ function putHero(req, res) {
         hero.region = updatedHero.region;
         hero.benefitLevel = updatedHero.benefitLevel;
         hero.pdm = updatedHero.pdm;
+        hero.pdmName = updatedHero.pdmName;
         hero.save(error => {
             if(checkServerError(res, error)) return;
             res.status(200).json(hero);

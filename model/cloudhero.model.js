@@ -7,6 +7,8 @@ const CloudHeroSchma = new Schema({
     benefitLevel: String,
     ptc: String,
     pdm: String,
+    ptcName: String,
+    pdmName: String
 });
 
 const CloudHero = mongoose.model('CloudHero', CloudHeroSchma);
