@@ -74,6 +74,27 @@ function deleteHero(req, res) {
         });
 }
 
+async function deleteManyHeros(req, res) {
+    const ids = req.body.ids;
+    let deletedNumber = 0;
+    if (ids && ids.length) {
+        try {
+            const v = await CloudHero.deleteMany({ MPNid: { $in: ids } });
+            deletedNumber = v.ok === 1 ? v.n : -1;
+        } catch (error) {
+            checkServerError(res, error);
+        }
+    }
+
+    if (deletedNumber === -1) {
+        res.status(500).send("Something wrong");
+    } else {
+        res.status(200).json({
+            msg: deletedNumber + ' partner(s) have been deleted.'
+        });
+    }
+}
+
 function getHeroesByPTC(req, res) {
     const docquery = CloudHero.find({ ptc: req.params.alias });
     docquery
@@ -135,6 +156,7 @@ module.exports = {
     postHero,
     putHero,
     deleteHero,
+    deleteManyHeros,
     getHeroesByPTC,
     getHeroesByPDM,
 }

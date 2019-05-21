@@ -65,6 +65,28 @@
 
 - **Error Response:**
 
+# Delete many partners
+- **URL**
+- **Method**
+- **URL Params**
+
+    None
+- **Data Params**
+    ```js
+    {
+        ids: number[] // Array of MPN id
+    }
+    ```
+- **Success Response**
+
+    HTTP 200
+    ```js
+    {
+        msg: string // Message
+    }
+    ```
+- **Error Response**
+
 # Get partner list
 
 - **URL**
