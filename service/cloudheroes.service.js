@@ -12,12 +12,12 @@ function getHeroes(req, res) {
         .catch(error => {
             res.status(500).send(error);
             return;
-        }); 
+        });
 }
 
 function postHero(req, res) {
 
-    if(!dataVerify(req, res)) return;
+    if (!dataVerify(req, res)) return;
 
     const newHero = {
         name: req.body.name,
@@ -32,55 +32,50 @@ function postHero(req, res) {
 
     cloudHeroes = new CloudHero(newHero);
 
-    cloudHeroes.save(error =>{
-        if(checkServerError(res, error)) return;
+    cloudHeroes.save(error => {
+        if (checkServerError(res, error)) return;
         res.status(201).send(cloudHeroes);
         console.log('cloud hero created successfully!')
     })
 }
 
 function putHero(req, res) {
-    if(!dataVerify(req,res)) return;
+    if (!notEmpty(req, res)) return;
     const id = parseInt(req.params.id, 10);
-    const updatedHero = { MPNid: req.body.MPNid,
-                          name: req.body.name,
-                          region: req.body.region, 
-                          benefitLevel: req.body.benefitLevel,
-                          pdm: req.body.pdm,
-                          pdmName: req.body.pdmName };
+    const updatedProps = req.body;
 
-    CloudHero.findOne({MPNid: id}, (error, hero) => {
-        if(checkServerError(res, error)) return;
-        if(!checkFound( res, hero)) return;
-        hero.MPNid = updatedHero.MPNid;
-        hero.name = updatedHero.name;
-        hero.region = updatedHero.region;
-        hero.benefitLevel = updatedHero.benefitLevel;
-        hero.pdm = updatedHero.pdm;
-        hero.pdmName = updatedHero.pdmName;
+    CloudHero.findOne({ MPNid: id }, (error, hero) => {
+        if (checkServerError(res, error)) return;
+        if (!checkFound(res, hero)) return;
+        updatedProps.MPNid && (hero.MPNid = updatedProps.MPNid);
+        updatedProps.name && (hero.name = updatedProps.name);
+        updatedProps.region && (hero.region = updatedProps.region);
+        updatedProps.benefitLevel && (hero.benefitLevel = updatedProps.benefitLevel);
+        updatedProps.pdm && (hero.pdm = updatedProps.pdm);
+        updatedProps.pdmName && (hero.pdmName = updatedProps.pdmName);
         hero.save(error => {
-            if(checkServerError(res, error)) return;
+            if (checkServerError(res, error)) return;
             res.status(200).json(hero);
             console.log('hero updated successfully!')
         });
     });
 }
 
-function deleteHero (req, res) {
+function deleteHero(req, res) {
     const id = parseInt(req.params.id, 10);
-    CloudHero.findOneAndDelete({MPNid: id})
+    CloudHero.findOneAndDelete({ MPNid: id })
         .then(hero => {
-            if(!checkFound(res, hero)) return;
+            if (!checkFound(res, hero)) return;
             res.status(200).json(hero);
             console.log('hero deleted successfully.');
         })
         .catch(error => {
-            if(checkServerError(res, error)) return;
+            if (checkServerError(res, error)) return;
         });
 }
 
-function getHeroesByPTC (req , res) {
-    const docquery = CloudHero.find({ptc: req.params.alias});
+function getHeroesByPTC(req, res) {
+    const docquery = CloudHero.find({ ptc: req.params.alias });
     docquery
         .exec()
         .then(cloudHeroes => {
@@ -92,11 +87,11 @@ function getHeroesByPTC (req , res) {
         })
 }
 
-function getHeroesByPDM (req, res) {
-    const docquery = CloudHero.find({pdm: req.params.alias});
+function getHeroesByPDM(req, res) {
+    const docquery = CloudHero.find({ pdm: req.params.alias });
     docquery
         .exec()
-        .then( cloudheroes => {
+        .then(cloudheroes => {
             res.status(200).send(cloudheroes);
         }).catch(error => {
             res.status(500).send(error);
@@ -104,16 +99,24 @@ function getHeroesByPDM (req, res) {
         })
 }
 
-function dataVerify (req, res) {
-    if(!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name || !req.body.pdm){
+function dataVerify(req, res) {
+    if (!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name || !req.body.pdm) {
         res.status(400).send('missing some data' + JSON.stringify(req.body));
         return false;
     }
     return true;
 }
 
+function notEmpty(req, res) {
+    if (!req.body.MPNid && !req.body.ptc && !req.body.region && !req.body.benefitLevel && !req.body.name && !req.body.pdm) {
+        res.status(400).send('body is not verified' + JSON.stringify(req.body));
+        return false;
+    }
+    return true;
+}
+
 function checkServerError(res, error) {
-    if(error){
+    if (error) {
         res.status(500).send(error);
         return error;
     }
