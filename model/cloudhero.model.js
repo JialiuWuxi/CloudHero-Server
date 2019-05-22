@@ -8,7 +8,10 @@ const CloudHeroSchma = new Schema({
     ptc: String,
     pdm: String,
     ptcName: String,
-    pdmName: String
+    pdmName: String,
+    BfC: Boolean,
+    CED: Boolean,
+    program: String
 });
 
 const CloudHero = mongoose.model('CloudHero', CloudHeroSchma);

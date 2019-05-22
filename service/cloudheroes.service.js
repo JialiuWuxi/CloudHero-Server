@@ -28,6 +28,9 @@ function postHero(req, res) {
         pdm: req.body.pdm,
         ptcName: req.body.ptcName,
         pdmName: req.body.pdmName,
+        BfC: req.body.BfC,
+        CED: req.body.CED,
+        program: req.body.program,
     };
 
     cloudHeroes = new CloudHero(newHero);
@@ -53,6 +56,9 @@ function putHero(req, res) {
         updatedProps.benefitLevel && (hero.benefitLevel = updatedProps.benefitLevel);
         updatedProps.pdm && (hero.pdm = updatedProps.pdm);
         updatedProps.pdmName && (hero.pdmName = updatedProps.pdmName);
+        updatedProps.CED && (hero.CED = updatedProps.CED);
+        updatedProps.BfC && (hero.BfC = updatedProps.BfC);
+        updatedProps.program && (hero.program = updatedProps.program);
         hero.save(error => {
             if (checkServerError(res, error)) return;
             res.status(200).json(hero);
