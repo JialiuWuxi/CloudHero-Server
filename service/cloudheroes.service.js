@@ -54,10 +54,12 @@ function putHero(req, res) {
         updatedProps.name && (hero.name = updatedProps.name);
         updatedProps.region && (hero.region = updatedProps.region);
         updatedProps.benefitLevel && (hero.benefitLevel = updatedProps.benefitLevel);
+        updatedProps.ptc && (hero.ptc = updatedProps.ptc);
+        updatedProps.ptcName && (hero.ptcName = updatedProps.ptcName);
         updatedProps.pdm && (hero.pdm = updatedProps.pdm);
         updatedProps.pdmName && (hero.pdmName = updatedProps.pdmName);
-        updatedProps.CED && (hero.CED = updatedProps.CED);
-        updatedProps.BfC && (hero.BfC = updatedProps.BfC);
+        (updatedProps.CED || updatedProps.CED === false) && (hero.CED = updatedProps.CED);
+        (updatedProps.BfC || updatedProps.BfC === false) && (hero.BfC = updatedProps.BfC);
         updatedProps.program && (hero.program = updatedProps.program);
         hero.save(error => {
             if (checkServerError(res, error)) return;
