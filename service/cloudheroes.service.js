@@ -2,6 +2,8 @@ const CloudHero = require('../model/cloudhero.model');
 
 require('../mongodb/mongodb').connect();
 
+const heroFieldNames = ["MPNid", "ptc", "region", "benefitLevel", "name", "pdm", "ptcName", "pdmName", "BfC", "CED", "program"];
+
 function getHeroes(req, res) {
     const docquery = CloudHero.find({});
     docquery
@@ -19,19 +21,8 @@ function postHero(req, res) {
 
     if (!dataVerify(req, res)) return;
 
-    const newHero = {
-        name: req.body.name,
-        MPNid: req.body.MPNid,
-        benefitLevel: req.body.benefitLevel,
-        region: req.body.region,
-        ptc: req.body.ptc,
-        pdm: req.body.pdm,
-        ptcName: req.body.ptcName,
-        pdmName: req.body.pdmName,
-        BfC: req.body.BfC,
-        CED: req.body.CED,
-        program: req.body.program,
-    };
+    const newHero = {};
+    heroFieldNames.forEach(fieldName => newHero[fieldName] = req.body[fieldName]);
 
     cloudHeroes = new CloudHero(newHero);
 
@@ -50,17 +41,13 @@ function putHero(req, res) {
     CloudHero.findOne({ MPNid: id }, (error, hero) => {
         if (checkServerError(res, error)) return;
         if (!checkFound(res, hero)) return;
-        updatedProps.MPNid && (hero.MPNid = updatedProps.MPNid);
-        updatedProps.name && (hero.name = updatedProps.name);
-        updatedProps.region && (hero.region = updatedProps.region);
-        updatedProps.benefitLevel && (hero.benefitLevel = updatedProps.benefitLevel);
-        updatedProps.ptc && (hero.ptc = updatedProps.ptc);
-        updatedProps.ptcName && (hero.ptcName = updatedProps.ptcName);
-        updatedProps.pdm && (hero.pdm = updatedProps.pdm);
-        updatedProps.pdmName && (hero.pdmName = updatedProps.pdmName);
-        (updatedProps.CED || updatedProps.CED === false) && (hero.CED = updatedProps.CED);
-        (updatedProps.BfC || updatedProps.BfC === false) && (hero.BfC = updatedProps.BfC);
-        updatedProps.program && (hero.program = updatedProps.program);
+
+        heroFieldNames.forEach(fieldName => {
+            if (updatedProps[fieldName] || updatedProps[fieldName] === false) {
+                hero[fieldName] = updatedProps[fieldName];
+            }
+        });
+
         hero.save(error => {
             if (checkServerError(res, error)) return;
             res.status(200).json(hero);
@@ -129,7 +116,7 @@ function getHeroesByPDM(req, res) {
 }
 
 function dataVerify(req, res) {
-    if (!req.body.MPNid || !req.body.ptc || !req.body.region || !req.body.benefitLevel || !req.body.name || !req.body.pdm) {
+    if (!heroFieldNames.reduce((res, fieldName) => !!(res && checkField(req.body[fieldName])), true)) {
         res.status(400).send('missing some data' + JSON.stringify(req.body));
         return false;
     }
@@ -137,7 +124,7 @@ function dataVerify(req, res) {
 }
 
 function notEmpty(req, res) {
-    if (!req.body.MPNid && !req.body.ptc && !req.body.region && !req.body.benefitLevel && !req.body.name && !req.body.pdm) {
+    if (!heroFieldNames.reduce((res, fieldName) => !!(res || checkField(req.body[fieldName])), false)) {
         res.status(400).send('body is not verified' + JSON.stringify(req.body));
         return false;
     }
@@ -157,6 +144,10 @@ function checkFound(res, hero) {
         return;
     }
     return hero;
+}
+
+function checkField(v) {
+    return v || v === false;
 }
 
 module.exports = {
